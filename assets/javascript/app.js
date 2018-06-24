@@ -108,7 +108,9 @@ function displayQueryTermForGif(gifQueryTermArray) {
 function generateGifQueryTermButton(gifQueryTerm) {
 	var gifQueryTermButton = $("<button>");
 	gifQueryTermButton.text(gifQueryTerm);
-	gifQueryTermButton.addClass("gif-query-term-button btn btn-info");
+	var bootstrapButtonClassArray = ["btn-primary", "btn-success", "btn-info", "btn-warning", "btn-danger"];
+	var selectedBootstrapButtonClass = bootstrapButtonClassArray[Math.floor(Math.random()*bootstrapButtonClassArray.length)];
+	gifQueryTermButton.addClass("gif-query-term-button btn "  + selectedBootstrapButtonClass);
 	return gifQueryTermButton;
 }
 
