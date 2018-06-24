@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	displayQueryTermForGif(getGifQueryTermArrayForGif());
 	gifQueryTermButtonClick();
-	requestGif("cat");
+	requestGif("random");
 	gifClickStateChange();
 });
 
@@ -92,7 +92,7 @@ function getGifQueryTermArrayForGif() {
 	if (localStorage.getItem("gifQueryTermArray")) {
 		gifQueryTermArray = localStorage.getItem("gifQueryTermArray");
 	} else {
-		gifQueryTermArray = ["ironman", "batman", "captain marvel", "superman"];
+		gifQueryTermArray = ["Black Panther", "Batman", "Captain Marvel", "Superman"];
 	}
 
 	return gifQueryTermArray;
