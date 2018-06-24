@@ -92,7 +92,7 @@ function getGifQueryTermArrayForGif() {
 	if (localStorage.getItem("gifQueryTermArray")) {
 		gifQueryTermArray = localStorage.getItem("gifQueryTermArray");
 	} else {
-		gifQueryTermArray = ["Black Panther", "Batman", "Captain Marvel", "Superman"];
+		gifQueryTermArray = ["Ironman", "Batman", "Captain Marvel", "Superman"];
 	}
 
 	return gifQueryTermArray;
