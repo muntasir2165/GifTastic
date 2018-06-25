@@ -18,10 +18,6 @@ function addGifQueryTermButtonClick() {
     	if (newQueryTerm) {
     		var newQueryTermCapitalized = newQueryTerm.substr(0,1).toUpperCase()+newQueryTerm.substr(1);
     		$("#gif-query-term").val("");
-    		// console.log(gifQueryTermArray);
-    		// gifQueryTermArray.push(newQueryTerm);
-    		// console.log(gifQueryTermArray);
-    		// console.log(getGifQueryTermArrayForGif());
     		displayQueryTermForGif(addToGifQueryTermArrayForGif(newQueryTermCapitalized));
     	}
     });
@@ -49,8 +45,8 @@ function requestGif(queryParameter) {
 	var fmt = "json";
 	var base_url = "https://api.giphy.com/v1/gifs/search";
 	var giphyUrl = base_url + "?api_key=" + api_key + "&q=" + queryTerm + "&limit=" +limit + "&offset=" + offset + "&rating=" + rating + "&fmt=" + fmt;
-	// console.log(triviaQuestionUrl);
-	// search the Open Trivia Database (https://opentdb.com/) for a list of trivia questions that match the selected parameter criteria
+	console.log(giphyUrl);
+	// search the Giphy API (https://github.com/Giphy) for a list of gifs that match the selected query parameter criteria
 	var gifArray = [];
 	$.ajax({
 		url: giphyUrl,
@@ -59,6 +55,8 @@ function requestGif(queryParameter) {
 
 			gifDataArray.forEach(function(gifData){
 			var gif = {};
+			gif["id"] = gifData["id"];
+			// console.log(gif["id"]);
 			gif["fixed_height_still_url"] = gifData["images"]["fixed_height_still"]["url"].replace("\\", "");
 			gif["fixed_height_url"] = gifData["images"]["fixed_height"]["url"].replace("\\", "");
 			gifArray.push(gif);
@@ -129,7 +127,7 @@ function getGifQueryTermArrayForGif() {
 	} else {
 		gifQueryTermArray = ["Ironman", "Batman", "Captain Marvel", "Superman"];
 	}
-	console.log(gifQueryTermArray);
+	// console.log(gifQueryTermArray);
 	return gifQueryTermArray;
 }
 
