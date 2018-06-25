@@ -4,7 +4,7 @@ $(document).ready(function() {
 	// displayQueryTermForGif(getGifQueryTermArrayForGif());
 	displayQueryTermForGif(gifQueryTermArray);
 	gifQueryTermButtonClick();
-	requestGif("random");
+	requestGif("trending");
 	gifClickStateChange();
 	addGifQueryTermButtonClick();
 	searchGifQueryTermButtonClick();
@@ -43,9 +43,9 @@ function requestGif(queryParameter, offsetNumber) {
 	var offset = offsetNumber ? offsetNumber : 0;
 	var rating = "g";
 	var fmt = "json";
-	var base_url = "https://api.giphy.com/v1/gifs/search";
+	var base_url = (queryParameter === "trending") ? "https://api.giphy.com/v1/gifs/trending" : "https://api.giphy.com/v1/gifs/search";
 	var giphyUrl = base_url + "?api_key=" + api_key + "&q=" + queryTerm + "&limit=" +limit + "&offset=" + offset + "&rating=" + rating + "&fmt=" + fmt;
-	// console.log(giphyUrl);
+	console.log(giphyUrl);
 	// search the Giphy API (https://github.com/Giphy) for a list of gifs that match the selected query parameter criteria
 	var gifArray = [];
 	$.ajax({
