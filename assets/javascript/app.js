@@ -108,7 +108,7 @@ function addGifToRow(row, gif) {
 function gifClickStateChange() {
     $("#gif-container").on("click", ".gif", function() {
       var state = $(this).attr("data-state");
-
+      // console.log("state: " + state);
       if (state === "still") {
         $(this).attr("src", $(this).attr("data-animate"));
         $(this).attr("data-state", "animate");
@@ -156,8 +156,9 @@ function generateGifQueryTermButton(gifQueryTerm) {
 
 function gifQueryTermButtonClick() {
     $("#gif-query-term-container").on("click", ".gif-query-term-button", function() {
+    	// console.log("inside gifQueryTermButtonClick()");
     	var queryTerm = $(this).text();
     	requestGif(queryTerm);
-		gifClickStateChange();
+		// gifClickStateChange();
     });	
 }
