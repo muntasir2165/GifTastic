@@ -1,7 +1,6 @@
 var gifQueryTermArray = getGifQueryTermArrayForGif();
 
 $(document).ready(function() {
-	// displayQueryTermForGif(getGifQueryTermArrayForGif());
 	displayQueryTermForGif(gifQueryTermArray);
 	gifQueryTermButtonClick();
 	requestGif("trending");
@@ -12,7 +11,6 @@ $(document).ready(function() {
 
 function addGifQueryTermButtonClick() {
     $("#add-gif-query-term-button").on("click", function(event) {
-    	// console.log("inside addGifQueryTermButtonClick()");
     	event.preventDefault();	
     	var newQueryTerm = $("#gif-query-term").val().trim();
     	if (newQueryTerm) {
@@ -25,8 +23,8 @@ function addGifQueryTermButtonClick() {
 
 function searchGifQueryTermButtonClick() {
     $("#search-gif-query-term-button").on("click", function(event) {
-    	// console.log("inside searchGifQueryTermButtonClick()");
-    	event.preventDefault();	
+    	event.preventDefault();
+
     	var newQueryTerm = $("#gif-query-term").val().trim();
     	if (newQueryTerm) {
     		var newQueryTermCapitalized = newQueryTerm.substr(0,1).toUpperCase()+newQueryTerm.substr(1);
@@ -36,7 +34,7 @@ function searchGifQueryTermButtonClick() {
     });
 }
 
-function requestGif(queryParameter, offsetNumber) {
+function requestGif(queryParameter, offsetNumber, appendToGifContainer) {
 	var api_key = "yv1H2Vx4ZNdzbPdXJtBIPyDxsBy4K2eM";
 	var queryTerm = queryParameter;
 	var limit = 10;
@@ -56,13 +54,17 @@ function requestGif(queryParameter, offsetNumber) {
 			gifDataArray.forEach(function(gifData){
 			var gif = {};
 			gif["id"] = gifData["id"];
-			// console.log(gif["id"]);
 			gif["fixed_height_still_url"] = gifData["images"]["fixed_height_still"]["url"].replace("\\", "");
 			gif["fixed_height_url"] = gifData["images"]["fixed_height"]["url"].replace("\\", "");
 			gifArray.push(gif);
 			});
-
-			displayGif(gifArray);
+			// console.log("gifArray size: " + gifArray.length);
+			setAddMoreGifButton(queryTerm, offset);
+			if (appendToGifContainer) {
+				displayGif(gifArray, true);
+			} else {
+				displayGif(gifArray);
+			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
 			alert("Sorry, invalid request.");
@@ -71,9 +73,28 @@ function requestGif(queryParameter, offsetNumber) {
 	});
 }
 
-function displayGif(gifArray) {
+function setAddMoreGifButton(queryTerm, offset) {
+	var addMoreGifButton = $("#add-more-gif-button");
+	addMoreGifButton.attr("data-query", queryTerm);
+	addMoreGifButton.attr("data-offset", parseInt(offset)+10);
+	$("#add-more-gif-button").on("click", function(){
+		event.preventDefault();
+
+		var queryTerm = $(this).attr("data-query");
+		var offset = $(this).attr("data-offset");
+		var appendToGifContainer = true;
+		requestGif(queryTerm, offset, appendToGifContainer);
+	});
+}
+
+function displayGif(gifArray, appendToGifContainer) {
 	var gifContainer = $("#gif-container");
-	gifContainer.empty();
+	// if appendToGifContainer is falsy (or not specified),
+	// then empty the #gif-container div before displaying
+	// gifs inside it
+	if (!appendToGifContainer){
+		gifContainer.empty();
+	}
 	for (var i=0; i < gifArray.length - 1; i+=2) {
 		var firstGif = gifArray[i];
 		var secondGif = gifArray[i+1];
@@ -108,7 +129,6 @@ function addGifToRow(row, gif) {
 function gifClickStateChange() {
     $("#gif-container").on("click", ".gif", function() {
       var state = $(this).attr("data-state");
-      // console.log("state: " + state);
       if (state === "still") {
         $(this).attr("src", $(this).attr("data-animate"));
         $(this).attr("data-state", "animate");
@@ -121,13 +141,11 @@ function gifClickStateChange() {
 }
 
 function getGifQueryTermArrayForGif() {
-	// var gifQueryTermArray;
 	if (localStorage.getItem("gifQueryTermArray")) {
 		gifQueryTermArray = JSON.parse(localStorage.getItem("gifQueryTermArray"));
 	} else {
 		gifQueryTermArray = ["Ironman", "Batman", "Captain Marvel", "Superman"];
 	}
-	// console.log(gifQueryTermArray);
 	return gifQueryTermArray;
 }
 
@@ -156,9 +174,7 @@ function generateGifQueryTermButton(gifQueryTerm) {
 
 function gifQueryTermButtonClick() {
     $("#gif-query-term-container").on("click", ".gif-query-term-button", function() {
-    	// console.log("inside gifQueryTermButtonClick()");
     	var queryTerm = $(this).text();
     	requestGif(queryTerm);
-		// gifClickStateChange();
     });	
 }
