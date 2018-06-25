@@ -44,12 +44,20 @@
 			</div>
 
 			<div class="row mt-2">
-				<div id="gif-container" class="col-md-7">
-				</div>
-				<div id="gif-container" class="col-md-3">
+				<div class="col-md-4 offset-md-8">
 					<form>
-						
+					  <div class="form-group">
+					    <label for="gif-query-term">Search GIFs of:</label>
+					    <input type="text" class="form-control" id="gif-query-term">
+					  </div>
+					  <button id="add-gif-query-term-button" type="submit" class="btn btn-primary">Add GIF Button</button>
+					  <button id="search-gif-query-term-button" type="submit" class="btn btn-primary">Just Display GIF</button>
 					</form>
+				</div>
+			</div>
+
+			<div class="row mt-2">
+				<div id="gif-container" class="col-md-8">
 				</div>
 			</div>
 

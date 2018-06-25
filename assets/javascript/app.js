@@ -1,9 +1,44 @@
+var gifQueryTermArray = getGifQueryTermArrayForGif();
+
 $(document).ready(function() {
-	displayQueryTermForGif(getGifQueryTermArrayForGif());
+	// displayQueryTermForGif(getGifQueryTermArrayForGif());
+	displayQueryTermForGif(gifQueryTermArray);
 	gifQueryTermButtonClick();
 	requestGif("random");
 	gifClickStateChange();
+	addGifQueryTermButtonClick();
+	searchGifQueryTermButtonClick();
 });
+
+function addGifQueryTermButtonClick() {
+    $("#add-gif-query-term-button").on("click", function(event) {
+    	// console.log("inside addGifQueryTermButtonClick()");
+    	event.preventDefault();	
+    	var newQueryTerm = $("#gif-query-term").val().trim();
+    	if (newQueryTerm) {
+    		var newQueryTermCapitalized = newQueryTerm.substr(0,1).toUpperCase()+newQueryTerm.substr(1);
+    		$("#gif-query-term").val("");
+    		// console.log(gifQueryTermArray);
+    		// gifQueryTermArray.push(newQueryTerm);
+    		// console.log(gifQueryTermArray);
+    		// console.log(getGifQueryTermArrayForGif());
+    		displayQueryTermForGif(addToGifQueryTermArrayForGif(newQueryTermCapitalized));
+    	}
+    });
+}
+
+function searchGifQueryTermButtonClick() {
+    $("#search-gif-query-term-button").on("click", function(event) {
+    	// console.log("inside searchGifQueryTermButtonClick()");
+    	event.preventDefault();	
+    	var newQueryTerm = $("#gif-query-term").val().trim();
+    	if (newQueryTerm) {
+    		var newQueryTermCapitalized = newQueryTerm.substr(0,1).toUpperCase()+newQueryTerm.substr(1);
+    		$("#gif-query-term").val("");
+    		requestGif(newQueryTermCapitalized);
+    	}
+    });
+}
 
 function requestGif(queryParameter) {
 	var api_key = "yv1H2Vx4ZNdzbPdXJtBIPyDxsBy4K2eM";
@@ -88,18 +123,25 @@ function gifClickStateChange() {
 }
 
 function getGifQueryTermArrayForGif() {
-	var gifQueryTermArray;
+	// var gifQueryTermArray;
 	if (localStorage.getItem("gifQueryTermArray")) {
-		gifQueryTermArray = localStorage.getItem("gifQueryTermArray");
+		gifQueryTermArray = JSON.parse(localStorage.getItem("gifQueryTermArray"));
 	} else {
 		gifQueryTermArray = ["Ironman", "Batman", "Captain Marvel", "Superman"];
 	}
-
+	console.log(gifQueryTermArray);
 	return gifQueryTermArray;
+}
+
+function addToGifQueryTermArrayForGif(newQueryTerm) {
+	gifQueryTermArray.push(newQueryTerm);
+	localStorage.setItem("gifQueryTermArray", JSON.stringify(gifQueryTermArray));
+	return getGifQueryTermArrayForGif();
 }
 
 function displayQueryTermForGif(gifQueryTermArray) {
 	var gifQueryTermContainer = $("#gif-query-term-container");
+	gifQueryTermContainer.empty();
 	gifQueryTermArray.forEach(function(gifQueryTerm){
 		gifQueryTermContainer.append(generateGifQueryTermButton(gifQueryTerm));
 	});
