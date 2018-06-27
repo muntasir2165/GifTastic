@@ -2,14 +2,15 @@ var gifQueryTermArray = getGifQueryTermArrayForGif();
 
 $(document).ready(function() {
 	displayQueryTermForGif(gifQueryTermArray);
-	gifQueryTermButtonClick();
+	gifQueryTermButtonClickListener();
 	requestGif("trending");
 	gifClickStateChange();
-	addGifQueryTermButtonClick();
-	searchGifQueryTermButtonClick();
+	addGifQueryTermButtonClickListener();
+	searchGifQueryTermButtonClickListener();
+	addMoreGifButtonClickListener();
 });
 
-function addGifQueryTermButtonClick() {
+function addGifQueryTermButtonClickListener() {
     $("#add-gif-query-term-button").on("click", function(event) {
     	event.preventDefault();	
     	var newQueryTerm = $("#gif-query-term").val().trim();
@@ -21,7 +22,7 @@ function addGifQueryTermButtonClick() {
     });
 }
 
-function searchGifQueryTermButtonClick() {
+function searchGifQueryTermButtonClickListener() {
     $("#search-gif-query-term-button").on("click", function(event) {
     	event.preventDefault();
 
@@ -61,7 +62,7 @@ function requestGif(queryParameter, offsetNumber, appendToGifContainer) {
 			// console.log("gifArray size: " + gifArray.length);
 			setAddMoreGifButton(queryTerm, offset);
 			if (appendToGifContainer) {
-				displayGif(gifArray, true);
+				displayGif(gifArray, appendToGifContainer);
 			} else {
 				displayGif(gifArray);
 			}
@@ -76,10 +77,12 @@ function requestGif(queryParameter, offsetNumber, appendToGifContainer) {
 function setAddMoreGifButton(queryTerm, offset) {
 	var addMoreGifButton = $("#add-more-gif-button");
 	addMoreGifButton.attr("data-query", queryTerm);
-	addMoreGifButton.attr("data-offset", parseInt(offset)+10);
+	addMoreGifButton.attr("data-offset", parseInt(offset)+11);
+}
+
+function addMoreGifButtonClickListener() {
 	$("#add-more-gif-button").on("click", function(){
 		event.preventDefault();
-
 		var queryTerm = $(this).attr("data-query");
 		var offset = $(this).attr("data-offset");
 		var appendToGifContainer = true;
@@ -172,7 +175,7 @@ function generateGifQueryTermButton(gifQueryTerm) {
 	return gifQueryTermButton;
 }
 
-function gifQueryTermButtonClick() {
+function gifQueryTermButtonClickListener() {
     $("#gif-query-term-container").on("click", ".gif-query-term-button", function() {
     	var queryTerm = $(this).text();
     	requestGif(queryTerm);
