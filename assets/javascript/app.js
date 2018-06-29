@@ -54,11 +54,14 @@ function requestGif(queryParameter, offsetNumber, appendToGifContainer) {
 			var gifDataArray = result["data"];
 
 			gifDataArray.forEach(function(gifData){
-			var gif = {};
-			gif["id"] = gifData["id"];
-			gif["fixed_height_still_url"] = gifData["images"]["fixed_height_still"]["url"].replace("\\", "");
-			gif["fixed_height_url"] = gifData["images"]["fixed_height"]["url"].replace("\\", "");
-			gifArray.push(gif);
+				console.log(gifData);
+				var gif = {};
+				gif["id"] = gifData["id"];
+				gif["title"] = gifData["title"];
+				gif["rating"] = gifData["rating"];
+				gif["fixed_height_still_url"] = gifData["images"]["fixed_height_still"]["url"].replace("\\", "");
+				gif["fixed_height_url"] = gifData["images"]["fixed_height"]["url"].replace("\\", "");
+				gifArray.push(gif);
 			});
 			// console.log("gifArray size: " + gifArray.length);
 			setAddMoreGifButton(queryTerm, offset);
@@ -115,7 +118,7 @@ function displayGif(gifArray, appendToGifContainer) {
 
 function addGifToRow(row, gif) {
 	var column = $("<div>");
-	column.addClass("col-md-5 offset-md-1 offset-md-right-1");
+	column.addClass("col-md-5 offset-md-1");
 	
 	var image = $("<img>");
 	image.addClass("gif");
@@ -124,7 +127,16 @@ function addGifToRow(row, gif) {
 	image.attr("data-animate", gif["fixed_height_url"]);
 	image.attr("data-state", "still");
 	
+	// image metadata
+	var imageMetadata = $("<div>");
+	imageMetadata.addClass("d-inline");
+	imageMetadata.text("Title: " + gif["title"]);
+	imageMetadata.append("<br>");
+	imageMetadata.append("Rating: " + gif["rating"].toUpperCase());
+
 	column.append(image);
+	column.append("<br>");
+	column.append(imageMetadata);
 	row.append(column);
 	
 	return row;
