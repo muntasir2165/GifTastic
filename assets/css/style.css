@@ -24,3 +24,6 @@ body {
     margin: 5px;
 }
 
+.clickableAwesomeFontTrashIcon {
+     cursor: pointer
+}

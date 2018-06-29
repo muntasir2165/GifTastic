@@ -3,10 +3,11 @@ var gifQueryTermArray = getGifQueryTermArrayForGif();
 $(document).ready(function() {
 	displayQueryTermForGif(gifQueryTermArray);
 	gifQueryTermButtonClickListener();
-	requestGif("trending");
+	requestGif("Trending");
 	gifClickStateChange();
 	addGifQueryTermButtonClickListener();
 	searchGifQueryTermButtonClickListener();
+	deleteQueryTermTrashIconClickListener();
 	addMoreGifButtonClickListener();
 });
 
@@ -131,15 +132,14 @@ function addGifToRow(row, gif) {
 
 function gifClickStateChange() {
     $("#gif-container").on("click", ".gif", function() {
-      var state = $(this).attr("data-state");
-      if (state === "still") {
-        $(this).attr("src", $(this).attr("data-animate"));
-        $(this).attr("data-state", "animate");
-      } else if (state === "animate") {
-        $(this).attr("src", $(this).attr("data-still"));
-        $(this).attr("data-state", "still");
-      }
-     
+	    var state = $(this).attr("data-state");
+	    if (state === "still") {
+	        $(this).attr("src", $(this).attr("data-animate"));
+	        $(this).attr("data-state", "animate");
+	    } else if (state === "animate") {
+	        $(this).attr("src", $(this).attr("data-still"));
+	        $(this).attr("data-state", "still");
+	    }
     });
 }
 
@@ -155,24 +155,52 @@ function getGifQueryTermArrayForGif() {
 function addToGifQueryTermArrayForGif(newQueryTerm) {
 	gifQueryTermArray.push(newQueryTerm);
 	localStorage.setItem("gifQueryTermArray", JSON.stringify(gifQueryTermArray));
+	console.log("Added '" + newQueryTerm + "' into the GIF query terms array");
+	
+	return getGifQueryTermArrayForGif();
+}
+
+function removeFromGifQueryTermArrayForGif(index) {
+	var removedQueryTerm = gifQueryTermArray.splice(index, 1);
+	console.log("Removed '" + removedQueryTerm + "' from the GIF query terms array");
+	localStorage.setItem("gifQueryTermArray", JSON.stringify(gifQueryTermArray));
+	
 	return getGifQueryTermArrayForGif();
 }
 
 function displayQueryTermForGif(gifQueryTermArray) {
 	var gifQueryTermContainer = $("#gif-query-term-container");
 	gifQueryTermContainer.empty();
-	gifQueryTermArray.forEach(function(gifQueryTerm){
-		gifQueryTermContainer.append(generateGifQueryTermButton(gifQueryTerm));
+	$.each(gifQueryTermArray, function (index, gifQueryTerm) {
+		gifQueryTermContainer.append(generateGifQueryTermButton(index, gifQueryTerm));
 	});
 }
 
-function generateGifQueryTermButton(gifQueryTerm) {
+function generateGifQueryTermButton(index, gifQueryTerm) {
+	var gifQueryTermButtonContainer = $("<div>");
+	gifQueryTermButtonContainer.addClass("d-inline");
+	
 	var gifQueryTermButton = $("<button>");
 	gifQueryTermButton.text(gifQueryTerm);
 	var bootstrapButtonClassArray = ["btn-primary", "btn-success", "btn-info", "btn-warning", "btn-danger"];
 	var selectedBootstrapButtonClass = bootstrapButtonClassArray[Math.floor(Math.random()*bootstrapButtonClassArray.length)];
 	gifQueryTermButton.addClass("gif-query-term-button btn "  + selectedBootstrapButtonClass);
-	return gifQueryTermButton;
+	
+	gifQueryTermButtonContainer.append(gifQueryTermButton);
+	gifQueryTermButtonContainer.append("<span class=\"clickableAwesomeFontTrashIcon\"><i data-index=\"" + index + "\" class=\"fa fa-trash\" aria-hidden=\"true\"></i></span>");
+	
+	return gifQueryTermButtonContainer;
+}
+
+function deleteQueryTermTrashIconClickListener() {
+	// $(".clickableAwesomeFontTrashIcon").on("click", "i", function() {
+	// the above line wasn't working and so, as per the suggestion at: 
+	// https://stackoverflow.com/questions/14186505/jquery-click-action-only-fires-once-per-page-refresh
+	// I am using the 'document' object as the selector
+    $(document).on("click", "i", function() {
+    	var index = parseInt($(this).attr("data-index"));
+	    displayQueryTermForGif(removeFromGifQueryTermArrayForGif(index));
+    });
 }
 
 function gifQueryTermButtonClickListener() {
