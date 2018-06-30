@@ -12,15 +12,11 @@ $(document).ready(function() {
 	deleteQueryTermTrashIconClickListener();
 	addMoreGifButtonClickListener();
 	addFavoriteGifButtonClickListener();
-	displayFavoriteGifs();
+	displayFavoriteGifs(getFavoriteGifArray());
 	removeFavoriteGifButtonClickListener();
 });
 
-function displayFavoriteGifs() {
-	displayFavoriteGif(getFavoriteGifArray());
-}
-
-function displayFavoriteGif(favoriteGifArray) {
+function displayFavoriteGifs(favoriteGifArray) {
 	var favoriteGifContainer = $("#favorite-gif-container");
 	favoriteGifContainer.empty();
 
@@ -85,6 +81,8 @@ function removeFavoriteGifButtonClickListener() {
 
 function getGifFromGifArray(id) {
 	var matchingGif = null;
+	// gifArray is the global array variable that gets populated when the AJAX
+	// call is made
 	$.each(gifArray, function (index, gif) {
 		if (id === gif["id"]) {
 			matchingGif = gif;
@@ -101,17 +99,6 @@ function getGifFromFavoriteGifArray(id) {
 		}
 	});
 	return matchingGif;
-}
-
-
-function removeGifFromFavoriteGitArray(id) {
-	var removedGif = null;
-	$.each(favoriteGifArray, function (index, gif) {
-		if (id === gif["id"]) {
-			removedGif = favoriteGifArray.splice(index, 1);
-		}
-	});
-	return removedGif;
 }
 
 function getFavoriteGifArray() {
@@ -138,11 +125,30 @@ function addToFavoriteGifArray(gifId) {
 }
 
 function removeFromFavoriteGifArray(gifId) {
-	var gif = removeGifFromFavoriteGitArray(gifId);
-	console.log("Removed gif with id: " + gif["id"] + "and title: " + gif["title"] + " from the favorite GIFs array");
-	localStorage.setItem("favoriteGifArray", JSON.stringify(favoriteGifArray));
-	
+	var gif = removeGifFromFavoriteGifArray(gifId);
+	if (gif) {
+		localStorage.setItem("favoriteGifArray", JSON.stringify(favoriteGifArray));
+		console.log("Removed gif with id: " + gif["id"] + "and title: " + gif["title"] + " from the favorite GIFs array");
+	}
 	return getFavoriteGifArray();
+}
+
+function removeGifFromFavoriteGifArray(id) {
+	var removedGif = null;
+	// $.each(getFavoriteGifArray(), function (index, gif) {
+	// 	console.log(gif);
+	// 	if (id === gif["id"]) {
+	// 		removedGif = getFavoriteGifArray().splice(index, 1)[0];
+	// 		console.log(removedGif);
+	// 		return removedGif;
+	// 	}
+	// });
+	for (var i=0; i < getFavoriteGifArray().length; i++) {
+		if (id === getFavoriteGifArray()[i]["id"]) {
+			removedGif = getFavoriteGifArray().splice(i, 1)[0];
+			return removedGif;			
+		}
+	}
 }
 
 function addGifQueryTermButtonClickListener() {
