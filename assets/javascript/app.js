@@ -20,6 +20,10 @@ function displayFavoriteGifs(favoriteGifArray) {
 	var favoriteGifContainer = $("#favorite-gif-container");
 	favoriteGifContainer.empty();
 
+	if (favoriteGifArray.length === 0) {
+		favoriteGifContainer.html("<h3>You don't have any GIFs in your Favorites list at the moment.</h3>");
+	}
+
 	favoriteGifArray.forEach(function(favoriteGif){
 		var row = $("<div>");
 		row.addClass("row mt-1");
