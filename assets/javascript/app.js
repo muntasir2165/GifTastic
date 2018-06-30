@@ -20,8 +20,9 @@ function displayFavoriteGifs(favoriteGifArray) {
 	var favoriteGifContainer = $("#favorite-gif-container");
 	favoriteGifContainer.empty();
 
+	// display a message when the user doesn't have any GIFs saved in the Favorites list
 	if (favoriteGifArray.length === 0) {
-		favoriteGifContainer.html("<h3>You don't have any GIFs in your Favorites list at the moment.</h3>");
+		favoriteGifContainer.html("<h3>You don't have any GIFs in your Favorites list at the moment</h3>");
 	}
 
 	favoriteGifArray.forEach(function(favoriteGif){
