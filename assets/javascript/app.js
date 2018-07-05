@@ -294,7 +294,7 @@ function addGifToRow(row, gif) {
 }
 
 function gifClickStateChange() {
-    $("#gif-container").on("click", ".gif", function() {
+	$(document).on("click", ".gif", function() {
 	    var state = $(this).attr("data-state");
 	    if (state === "still") {
 	        $(this).attr("src", $(this).attr("data-animate"));
